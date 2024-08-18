@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+    
+</head>
+
+<body class="font-['helvetica_now_display']">
+    <nav class="w-full flex justify-between fixed top-0 left-0 px-5 py-3">
+        <h3 class="text-xl">Scatch</h3>
+        <% var LoggedIn=typeof LoggedIn !=="undefined" ? LoggedIn : true %>
+            <% if(LoggedIn){%>
+                <div class="flex gap-4">
+                    <a href="/shop">Shop</a>
+                    <a href="/cart">Cart</a>
+                    <div class="bg-gray-100">
+
+                        <!-- Navbar -->
+                        <nav class="bg-orange-600 py-1 px-4">
+                            <div class="flex justify-between items-center">
+                                <div class="text-white font-bold">SUPPORT</div>
+                                <div class="relative">
+                                    <!-- Profile Dropdown Trigger -->
+                                    <button id="profileDropdown" class="flex items-center text-white focus:outline-none">
+                                        <span>MUHAMMAD AHSAN'S ACC...</span>
+                                        <!-- Add some spacing -->
+                                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                    
+                                    <!-- Profile Dropdown Menu -->
+                                    <div id="dropdownMenu" class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-2 hidden">
+                                        <a href="/userprofile" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">😊</span>
+                                            <span>Manage My Account</span>
+                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">🛍️</span>
+                                            <span>My Orders</span>
+                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">❤️</span>
+                                            <span>My Wishlist & Followed Stores</span>
+                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">⭐</span>
+                                            <span>My Reviews</span>
+                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">❌</span>
+                                            <span>My Returns & Cancellations</span>
+                                        </a>
+                                        <a href="/logout" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <span class="mr-2">🔓</span>
+                                            <span>Logout</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <a href="/owner-login">Owner Create/Login</a>
+                    <a href="/logout">Logout</a>
+                </div>
+                <%}%>
+                    <% if(!LoggedIn){%>
+                        <div class="flex gap-4">
+                            <a href="">User is on / page so Navbar is not showing</a>
+                        </div>
+                        <%}%>
+    </nav>

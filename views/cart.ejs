@@ -1,0 +1,155 @@
+<%- include('./partials/header') %>
+    <div class="w-full px-20 pt-10">
+        <% if (error.length> 0) { %>
+            <div id="errorMessage"
+                class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500 transition-transform transform duration-500 ease-in-out">
+                <span class="inline-block mt-1 mb-1 text-white">
+                    <%= error %>
+                </span>
+            </div>
+            <% } %>
+                <% if (success.length> 0) { %>
+                    <div id="successMessage"
+                        class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500 transition-transform transform duration-500 ease-in-out">
+                        <span class="inline-block mt-1 mb-1 text-white">
+                            <%= success %>
+                        </span>
+                    </div>
+                    <% } %>
+
+
+                        <% if (user.cart.length===0) { %>
+                            <div class="flex justify-center items-start mt-10 font-medium">
+                                <p>User has no items in the cart</p>
+                            </div>
+                            <% } else{ %>
+
+                                <% user.cart.reverse().forEach(function(item) { %>
+
+
+                                    <a href="/product/cart/<%= item.productId._id %>"
+                                        class="block no-underline text-current">
+                                        <div class="bg-white shadow-md rounded-lg mb-6 p-4">
+                                            <div class="flex items-center">
+                                                <!-- Product Image -->
+                                                <div
+                                                    class="w-24 h-24 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 flex justify-center items-center">
+                                                    <% if (item.productId && item.productId.image) { %>
+                                                        <img class="h-[5rem] object-cover"
+                                                            src="data:image/jpeg;base64,<%= item.productId.image.toString('base64') %>"
+                                                            alt="<%= item.name %>">
+                                                        <% } else { %>
+                                                            <!-- Provide a fallback image if the product image is missing -->
+                                                            <img class="h-[5rem] object-cover"
+                                                                src="/path/to/default/image.jpg" alt="Default Image">
+                                                            <% } %>
+
+                                                </div>
+                                                <!-- Product Info -->
+                                                <div class="ml-4 flex-grow">
+                                                    <div class="flex items-center justify-between">
+                                                        <div>
+                                                            <h3 class="text-sm font-semibold text-gray-800">
+                                                                <%= item.productId.name %>
+                                                            </h3>
+                                                            <div class="flex items-center text-sm text-orange-500">
+                                                                <span class="mr-2">8.8</span>
+                                                                <span class="text-gray-500">
+                                                                    <%= item.productId.brand || 'Brand Name' %>
+                                                                </span>
+                                                            </div>
+                                                            <p class="text-xs text-gray-500">Ends at <%= new
+                                                                    Date().toLocaleString() %>
+                                                            </p>
+                                                        </div>
+                                                        <div class="text-right">
+                                                            <p class="text-orange-600 text-lg font-bold">
+                                                                Rs. <%= item.productId.price - item.productId.discount
+                                                                    %>
+                                                            </p>
+                                                            <p class="text-xs text-gray-500 line-through">
+                                                                Rs. <%= item.productId.price %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-4 flex items-center justify-between">
+                                                <!-- Quantity Controls -->
+                                                <div class="flex items-center">
+                                                    <form method="POST"
+                                                        action="/cart/decrement/<%= item.productId.id %>"
+                                                        onsubmit="event.stopPropagation();">
+                                                        <button type="submit"
+                                                            class="px-2 py-1 text-sm text-gray-500 border border-gray-300 rounded-md">-</button>
+                                                    </form>
+                                                    <span class="mx-2 text-sm text-gray-800">
+                                                        <%= item.quantity || 1 %>
+                                                    </span>
+                                                    <form method="POST"
+                                                        action="/cart/increment/<%= item.productId.id %>"
+                                                        onsubmit="event.stopPropagation();">
+                                                        <button type="submit"
+                                                            class="px-2 py-1 text-sm text-gray-500 border border-gray-300 rounded-md">+</button>
+                                                    </form>
+                                                </div>
+                                    </a>
+
+                                    <!-- Actions -->
+                                    <div class="flex items-center space-x-4">
+                                        <button class="text-gray-500 hover:text-red-600"
+                                            onclick="event.stopPropagation(); toggleLike('<%= item.productId._id %>');">
+                                            <% if (item.productId.like && item.productId.like.includes(user._id)) { %>
+                                                <i class="ri-heart-fill"></i>
+                                                <% } else { %>
+                                                    <i class="ri-heart-line"></i>
+                                                    <% } %>
+                                        </button>
+
+
+                                        <button class="text-gray-500 hover:text-red-600"
+                                            onclick="event.stopPropagation(); event.preventDefault(); openModal('<%= item.productId.id %>');">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+                                    </div>
+
+
+
+                                    <div id="deleteModal"
+                                        class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center invisible transition-opacity opacity-0">
+                                        <div class="bg-white rounded-lg w-1/3 mt-10 transform transition-all ease-in-out duration-300 -translate-y-full"
+                                            id="modalContent">
+                                            <div class="p-6">
+                                                <h3 class="text-lg font-medium text-gray-900">Remove
+                                                    from
+                                                    cart</h3>
+                                                <p class="mt-2 text-sm text-gray-600">Item(s) will be
+                                                    removed from the
+                                                    order</p>
+                                            </div>
+                                            <div class="flex justify-end p-6 border-t border-gray-200">
+                                                <button
+                                                    onclick="event.stopPropagation(); event.preventDefault(); closeModal();"
+                                                    class="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                                    Cancel
+                                                </button>
+
+
+                                                <button id="deleteButton"
+                                                    onclick="event.stopPropagation(); event.preventDefault(); openModal('<%= item.productId.id %>');"
+                                                    class="ml-3 px-4 py-2 text-white bg-[#2abbe8] border
+                                                                border-transparent rounded-md hover:bg-[#229ac0]">
+                                                    Delete
+                                                </button>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+    </div>
+    </div>
+    <% }) %>
+        <% } %>
+            </div>
+
+            <%- include('./partials/footer') %>
